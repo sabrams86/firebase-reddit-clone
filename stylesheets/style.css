@@ -1,0 +1,114 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  padding: 0;
+  margin: 0;
+  font-family: 'helvetica', sans-serif;
+}
+
+.container {
+  width: 960px;
+}
+.container-header {
+  max-width: 960px;
+}
+
+.thumbnail{
+  display: inline-block;
+  height: 150px;
+  width: 200px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.post {
+  border-radius: 3px;
+  border: 2px solid #dddddd;
+  background: #FAFAFA;
+  padding: 20px;
+  margin-bottom: 20px;
+  min-height:190px;
+}
+.ng-enter, .ng-leave, .ng-move {
+  -webkit-animation: 0.5s bounceInUp ease;
+  animation: 0.5s bounceInUp ease;
+}
+.post:hover {
+  box-shadow: 2px 2px 1px #eeeeee;
+}
+
+.post h1 {
+  font-size: 20px;
+}
+.post footer {
+  font-size: 12px;
+}
+.image {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  width: 25%;
+}
+.content {
+  display: inline-block;
+  vertical-align: top;
+  width: 75%;
+}
+.content main{
+  height: 100px;
+}
+.right {
+  float: right;
+}
+.clear {
+  clear: both;
+}
+.title {
+  font-weight: 600;
+  display: inline-block;
+}
+.content i:hover {
+  color: #777777;
+  cursor: pointer;
+}
+
+.pipe {
+  font-weight: 700;
+}
+.comments {
+  margin-top: 20px;
+}
+.comments .comment {
+  margin-top: 10px;
+  font-size: 14px;
+}
+.name {
+  font-weight: 700;
+}
+.comment-form {
+  margin-top: 20px;
+  font-size: 12px;
+}
+.rating {
+  font-weight: 700;
+}
+.black {
+  color: black;
+}
+.green {
+  color: green;
+}
+.red {
+  color: red;
+}
+
+.ng-hide-add {
+  -webkit-animation: 0.5s fadeOut ease;
+  animation: 0.5s fadeOut ease;
+}
+.ng-hide-remove {
+  -webkit-animation: 0.5s fadeIn ease;
+  animation: 0.5s fadeIn ease;
+}

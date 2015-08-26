@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+<html ng-app="rclone">
+<head>
+  <title>Express</title>
+  <script src="https://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel='stylesheet', href='/bower_components/css-reset/reset.min.css'>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.4.0/animate.min.css">
+  <script src="/bower_components/angular/angular.min.js"></script>
+  <script src="/bower_components/angular-route/angular-route.min.js"></script>
+  <script src="/bower_components/angular-animate/angular-animate.min.js"></script>
+  <script src="/bower_components/moment/moment.js"></script>
+  <script src="/bower_components/angular-moment/angular-moment.js"></script>
+</head>
+<body ng-controller="NavbarController as main">
+  <header>
+    <div>
+      <nav class="navbar navbar-default">
+        <div class="container-fluid container-header">
+          <div class="navbar-header">
+            <button type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false" class="navbar-toggle collapsed">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a href="#" class="navbar-brand">Reddit Clone</a>
+          </div>
+          <div id="bs-example-navbar-collapse-1" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+              <li>
+                <a href="#" ng-click="showPostForm()"><i class="fa fa-plus"> </i> Submit Post</a>
+              </li>
+            </ul>
+            <form role="search" class="navbar-form navbar-left">
+              <div class="form-group">
+                <input type="text" ng-model="search.title" placeholder="Search" class="form-control">
+              </div>
+            </form>
+            <ul class="nav navbar-nav">
+              <li class="dropdown">
+                <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle">{{sortOrder}}
+                  <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a href="#" ng-click="orderVotes()">Votes</a></li>
+                  <li><a href="#" ng-click="orderDates()">Date</a></li>
+                  <li><a href="#" ng-click="orderTitles()">Title</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div class="container">
+        <form id="post-form" name="userForm" ng-hide="newPost == false" ng-submit="submitForm(userForm.$valid)" novalidate>
+          <div class="form-group">
+            <div ng-class="{ 'has-error' : userForm.title.$invalid &amp;&amp; !userForm.title.$pristine }" class="form-group">
+              <label for="title">Title</label>
+              <input id="title" type="text" name="title" ng-model="title" required ng-minlength="2" class="form-control">
+              <p ng-show="userForm.title.$invalid &amp;&amp; !userForm.title.$pristine" class="help-block">Title is required.</p>
+              <p ng-show="userForm.title.$error.minlength" class="help-block">Title is too short.</p>
+            </div>
+            <div ng-class="{ 'has-error' : userForm.author.$invalid &amp;&amp; !userForm.author.$pristine }" class="form-group">
+              <label for="author">Author</label>
+              <input id="author" type="text" name="author" ng-model="author" required ng-minlength="2" class="form-control">
+              <p ng-show="userForm.author.$invalid &amp;&amp; !userForm.author.$pristine" class="help-block">Your name is required.</p>
+              <p ng-show="userForm.author.$error.minlength" class="help-block">Author is too short.</p>
+            </div>
+            <div ng-class="{ 'has-error' : userForm.url.$invalid &amp;&amp; !userForm.url.$pristine }" class="form-group">
+              <label for="url">Image URL</label>
+              <input id="url" type="url" name="url" ng-model="url" required class="form-control">
+              <p ng-show="userForm.url.$invalid &amp;&amp; !userForm.url.$pristine" class="help-block">Image URL is required.</p>
+            </div>
+            <div ng-class="{ 'has-error' : userForm.description.$invalid &amp;&amp; !userForm.description.$pristine }" class="form-group">
+              <label for="description">Description</label>
+              <input id="description" type="text" name="description" ng-model="description" required class="form-control">
+              <p ng-show="userForm.description.$invalid &amp;&amp; !userForm.description.$pristine" class="help-block">Description is required</p>
+            </div>
+            <div class="form-group">
+              <button type="submit" ng-click="createPost()" ng-disabled="userForm.$invalid" class="btn">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </header>
+  <div class="container">
+    <div ng-repeat="post in posts | filter:search | orderBy: order: orderDir" class="post">
+      <div class="image">
+        <img ng-src="{{post.url}}" class="thumbnail">
+      </div>
+      <div class="content">
+        <header>
+          <h1 class="title">{{post.title}}</h1>
+          <span class="pipe">   </span>
+          <i ng-click="upVote()" class="fa fa-arrow-up"> </i>
+          <i ng-click="downVote()" class="fa fa-arrow-down"> </i>
+          <span ng-class="{green: post.votes &gt; 0, black: post.votes == 0, red: post.votes &lt; 0}" class="rating"> {{post.votes}}</span>
+        </header>
+        <main>
+          <p class="right">By {{post.author}}</p>
+          <div class="clear"></div>
+          <p>{{post.description}}</p>
+        </main>
+        <footer>
+          <div class="post-footer">
+            <i class="fa fa-calendar"></i>
+            <span am-time-ago="{post.date}" class="date">{{post.date | amCalendar}}</span>
+            <span class="pipe">   </span>
+            <i ng-click="commentShow()" class="fa fa-comment">
+              <span>
+                <ng-pluralize count="post.comments.length" when="{0: ' No Comments ', 1: ' 1 comment ', other: ' {} comments '}"></ng-pluralize>
+              </span></i>
+              <i ng-click="commentFormShow()" class="fa fa-pencil">
+                <span> Add Comment </span>
+              </i>
+            </div>
+          </footer>
+          <div ng-hide="showCommentForm == false" class="comment-form">
+            <form name="commentForm" ng-submit="submitForm(commentForm.$valid)" novalidate class="form-inline">
+              <div class="form-group">
+                <div ng-class="{ 'has-error' : commentForm.name.$invalid &amp;&amp; !commentForm.name.$pristine }" class="form-group">
+                  <label>Name &nbsp;
+                    <input type="text" name="name" ng-model="comments.name" required ng-minlength="2" class="form-control input-sm">
+                  </label>
+                  <p ng-show="commentForm.name.$invalid &amp;&amp; !commentForm.name.$pristine" class="help-block">Enter your name </p>
+                  <p ng-show="commentForm.name.$error.minlength" class="help-block">Title is too short.</p>
+                  &nbsp;&nbsp;
+                </div><div ng-class="{ 'has-error' : commentForm.content.$invalid &amp;&amp; !commentForm.content.$pristine }" class="form-group">
+                  <label>Comment &nbsp;
+                    <input type="text" name="content" ng-model="comments.content" required class="form-control input-sm">
+                  </label>
+                  <p ng-show="commentForm.content.$invalid &amp;&amp; !commentForm.content.$pristine" class="help-block">Enter a comment</p>
+                  &nbsp;&nbsp;
+                  <button type="submit" ng-click="postComment()" ng-disabled="commentForm.$invalid" class="btn btn-default btn-sm">Post</button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div ng-hide="showComments == false" class="comments">
+            <div ng-repeat="comment in post.comments" class="comment">
+              <span class="name">{{comment.name}} - </span>
+              <span class="content">{{comment.content}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <div class="container">
+
+      </div>
+    </footer>
+
+    <script src="/javascripts/seed.js"></script>
+    <script src="/javascripts/app.js"></script>
+    <script src="/javascripts/controller.js"></script>
+  </body>
+  </html>

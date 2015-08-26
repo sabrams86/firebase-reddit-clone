@@ -1,0 +1,22 @@
+{
+  "name": "firebase-reddit-clone",
+  "version": "0.0.0",
+  "authors": [
+    "Steven Abrams <steven.abrams86@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.4",
+    "angular-route": "~1.4.4",
+    "angular-animate": "~1.4.4",
+    "angular-moment": "~0.10.2",
+    "css-reset": "~2.5.1"
+  }
+}

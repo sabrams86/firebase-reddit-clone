@@ -1,1 +1,1 @@
-var app = angular.module("rclone", ['ngAnimate', 'angularMoment']);
+var app = angular.module("rclone", ['ngAnimate', 'angularMoment', 'firebase']);

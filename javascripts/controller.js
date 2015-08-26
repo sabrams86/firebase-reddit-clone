@@ -1,4 +1,5 @@
-app.controller("NavbarController", function ($scope) {
+app.controller("NavbarController", ['$scope', '$firebaseObject', function ($scope, $firebaseObject) {
+  var data = new Firebase('https://sa-todolist.firebaseio.com/reddit');
   $scope.sortOrder = "Sort By Votes";
   $scope.newPost = false;
   $scope.showComments = false;
@@ -64,4 +65,4 @@ app.controller("NavbarController", function ($scope) {
   $scope.commentFormShow = function () {
     this.showCommentForm = !this.showCommentForm;
   }
-})
+}])

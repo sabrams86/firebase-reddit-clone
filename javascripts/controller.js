@@ -1,5 +1,6 @@
-app.controller("NavbarController", ['$scope', '$firebaseObject', function ($scope, $firebaseObject) {
+app.controller("NavbarController", ['$scope', '$firebaseArray', function ($scope, $firebaseArray) {
   var data = new Firebase('https://sa-todolist.firebaseio.com/reddit');
+  $scope.posts = $firebaseArray(data);
   $scope.sortOrder = "Sort By Votes";
   $scope.newPost = false;
   $scope.showComments = false;
@@ -15,20 +16,26 @@ app.controller("NavbarController", ['$scope', '$firebaseObject', function ($scop
     post.description = $scope.description;
     post.date = Date.now();
     post.votes = 0;
-    post.comments = [];
-    posts.push(post);
-    $scope.showPostForm();
-    $scope.title = '';
-    $scope.author = '';
-    $scope.url = '';
-    $scope.description = '';
-    $scope.userForm.$setPristine();
+    $scope.posts.$add(post).then(function (data) {
+      $scope.showPostForm();
+      $scope.title = '';
+      $scope.author = '';
+      $scope.url = '';
+      $scope.description = '';
+      $scope.userForm.$setPristine();
+    })
   }
+  //need to convert
   $scope.postComment = function () {
+    if (!this.post.comments){
+      this.post.comments = [];
+    }
     var comment = {};
     comment.name = this.comments.name;
     comment.content = this.comments.content;
     this.post.comments.push(comment);
+    $scope.posts.$save(this.post);
+
     this.showCommentForm = !this.showCommentForm;
     this.comments.name = '';
     this.comments.content = '';
@@ -52,12 +59,13 @@ app.controller("NavbarController", ['$scope', '$firebaseObject', function ($scop
   }
   $scope.order = 'votes';
   $scope.orderDir = 'reverse';
-  $scope.posts = posts;
-  $scope.upVote = function () {
+  $scope.upVote = function (post) {
     this.post.votes += 1;
+    $scope.posts.$save(post);
   }
-  $scope.downVote = function () {
+  $scope.downVote = function (post) {
     this.post.votes -= 1;
+    $scope.posts.$save(post);
   }
   $scope.commentShow = function () {
     this.showComments = !this.showComments;
